@@ -1,0 +1,26 @@
+plugins {
+    id 'example.android.library'
+    id 'example.android.hilt'
+}
+
+android {
+    namespace 'io.github.fornewid.feature.work.impl'
+    defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    implementation project(':feature-bar-api')
+    implementation project(':feature-work-api')
+
+    implementation libs.androidx.core
+
+    implementation libs.androidx.work.runtime
+    implementation libs.androidx.hilt.work
+    kapt libs.androidx.hilt.compiler
+
+    testImplementation libs.junit
+    androidTestImplementation libs.test.ext.junit
+    androidTestImplementation libs.test.espresso.core
+}

@@ -1,0 +1,18 @@
+plugins {
+    id 'example.android.library'
+}
+
+android {
+    namespace 'io.github.fornewid.feature.work'
+    defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    implementation libs.androidx.core
+
+    testImplementation libs.junit
+    androidTestImplementation libs.test.ext.junit
+    androidTestImplementation libs.test.espresso.core
+}

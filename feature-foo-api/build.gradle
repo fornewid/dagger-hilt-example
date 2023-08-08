@@ -1,0 +1,20 @@
+plugins {
+    id 'example.android.library'
+}
+
+android {
+    namespace 'io.github.fornewid.feature.foo'
+    defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.core
+    implementation libs.android.material
+
+    testImplementation libs.junit
+    androidTestImplementation libs.test.ext.junit
+    androidTestImplementation libs.test.espresso.core
+}

@@ -1,0 +1,26 @@
+pluginManagement {
+    includeBuild("build-logic")
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+include ':app'
+include ':feature-foo-api'
+include ':feature-foo-impl'
+include ':feature-bar-api'
+include ':feature-bar-impl'
+include ':feature-work-api'
+include ':feature-work-impl'
+include ':feature-navigation-compose'
+include ':feature-navigation-fragment'

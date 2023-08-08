@@ -1,0 +1,32 @@
+plugins {
+    id 'example.android.library'
+    id 'example.android.hilt'
+}
+
+android {
+    namespace 'io.github.fornewid.feature.navigation.compose'
+    defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.8"
+    }
+}
+
+dependencies {
+    implementation project(':feature-bar-api')
+    implementation libs.androidx.core
+
+    implementation platform('androidx.compose:compose-bom:2023.06.01')
+    implementation 'androidx.compose.foundation:foundation'
+    implementation 'androidx.compose.material:material'
+    implementation libs.androidx.navigation.compose
+    implementation libs.androidx.hilt.navigation.compose
+
+    testImplementation libs.junit
+    androidTestImplementation libs.test.ext.junit
+    androidTestImplementation libs.test.espresso.core
+}

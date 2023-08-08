@@ -1,0 +1,51 @@
+plugins {
+    id 'example.android.application'
+    id 'example.android.hilt'
+}
+
+android {
+    namespace 'io.github.fornewid.dagger.hilt.example'
+    defaultConfig {
+        applicationId "io.github.fornewid.dagger.hilt.example"
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation project(':feature-foo-api')
+    runtimeOnly project(':feature-foo-impl')
+
+    implementation project(':feature-bar-api')
+    runtimeOnly project(':feature-bar-impl')
+
+    implementation project(':feature-work-api')
+    runtimeOnly project(':feature-work-impl')
+
+    implementation project(':feature-navigation-fragment')
+    implementation project(':feature-navigation-compose')
+
+    implementation libs.kotlin.stdlib
+
+    implementation libs.androidx.activity
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.core
+    implementation libs.androidx.fragment
+
+    implementation libs.androidx.work.runtime
+    implementation libs.androidx.hilt.work
+    kapt libs.androidx.hilt.compiler
+
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+
+    implementation libs.android.material
+
+    testImplementation libs.junit
+    androidTestImplementation libs.test.ext.junit
+    androidTestImplementation libs.test.espresso.core
+}
