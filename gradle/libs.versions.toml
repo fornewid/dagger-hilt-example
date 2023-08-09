@@ -16,6 +16,9 @@ androidx-lifecycle = "2.6.1"
 androidx-navigation = "2.6.0"
 androidx-work = "2.8.1"
 
+compose-bom = "2023.06.01"
+compose-compiler = "1.4.8"
+
 dagger = "2.47"
 
 junit = "4.13.2"
@@ -61,6 +64,10 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "androidx-work" }
+
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-material = { module = "androidx.compose.material:material" }
 
 dagger-hilt-pluginGradle = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "dagger" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger" }
