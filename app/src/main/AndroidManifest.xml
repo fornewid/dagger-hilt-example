@@ -19,6 +19,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".ExampleService" />
+        <service android:name=".ExampleLifecycleService" />
+
+        <receiver android:name=".ExampleBroadcastReceiver" />
+
+        <provider
+            android:name=".ExampleContentProvider"
+            android:authorities="io.github.fornewid.dagger.hilt.example.ExampleContentProvider"
+            android:exported="false" />
     </application>
 
 </manifest>

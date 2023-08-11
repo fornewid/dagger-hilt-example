@@ -17,6 +17,12 @@ android {
     }
 }
 
+// Turn ON enableAggregatingTask by default in Dagger Hilt 2.40
+// https://github.com/google/dagger/releases/tag/dagger-2.40
+//hilt {
+//    enableAggregatingTask = true
+//}
+
 dependencies {
     implementation project(':feature-foo-api')
     runtimeOnly project(':feature-foo-impl')
@@ -42,6 +48,8 @@ dependencies {
     kapt libs.androidx.hilt.compiler
 
     implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.service
+    implementation libs.androidx.lifecycle.process
 
     implementation libs.android.material
 
