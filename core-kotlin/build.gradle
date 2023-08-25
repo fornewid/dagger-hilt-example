@@ -1,25 +1,18 @@
 plugins {
     id 'example.android.library'
-    id 'example.android.compose'
     id 'example.android.hilt'
 }
 
 android {
-    namespace 'io.github.fornewid.feature.navigation.compose'
+    namespace 'io.github.fornewid.core.kotlin'
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
 dependencies {
-    implementation project(':core-compose')
-    implementation project(':feature-bar-api')
+    implementation libs.coroutines.android
     implementation libs.androidx.core
-
-    implementation libs.compose.foundation
-    implementation libs.compose.material
-    implementation libs.androidx.navigation.compose
-    implementation libs.androidx.hilt.navigation.compose
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'io.github.fornewid.feature.navigation.compose'
+    namespace 'io.github.fornewid.feature.compose'
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

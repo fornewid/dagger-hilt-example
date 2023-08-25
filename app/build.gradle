@@ -36,6 +36,8 @@ dependencies {
     implementation project(':feature-navigation-fragment')
     implementation project(':feature-navigation-compose')
 
+    implementation project(':feature-compose')
+
     implementation libs.kotlin.stdlib
 
     implementation libs.androidx.activity

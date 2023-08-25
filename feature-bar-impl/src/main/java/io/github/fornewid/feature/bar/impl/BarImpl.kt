@@ -6,4 +6,9 @@ import javax.inject.Inject
 
 class BarImpl @Inject constructor(
     private val foo: Foo,
-) : Bar
+) : Bar {
+
+    override fun toString(): String {
+        return "BarImpl(foo=$foo)"
+    }
+}

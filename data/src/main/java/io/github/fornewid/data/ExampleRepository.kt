@@ -1,6 +1,6 @@
 package io.github.fornewid.data
 
-import io.github.fornewid.core.IoDispatcher
+import io.github.fornewid.core.kotlin.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
