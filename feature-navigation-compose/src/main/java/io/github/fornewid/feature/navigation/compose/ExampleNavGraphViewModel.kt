@@ -10,7 +10,7 @@ class ExampleNavGraphViewModel @Inject constructor(
     private val bar: Bar,
 ) : ViewModel() {
 
-    fun doSomething() {
-        bar.toString()
+    fun getSomething(): String {
+        return "ExampleNavGraphViewModel@" + hashCode().toString(16)
     }
 }
