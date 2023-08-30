@@ -43,7 +43,7 @@ object HiltComposableScoped {
     }
 
     @Composable
-    fun GrandParents() {
+    private fun GrandParents() {
         val stateHolder = rememberStateHolder()
         Column {
             Text(
@@ -55,7 +55,7 @@ object HiltComposableScoped {
     }
 
     @Composable
-    fun Parents() {
+    private fun Parents() {
         val stateHolder = rememberStateHolder()
         Column {
             Text(
@@ -67,7 +67,7 @@ object HiltComposableScoped {
     }
 
     @Composable
-    fun Children() {
+    private fun Children() {
         val stateHolder = rememberStateHolder()
         Column {
             Text(
@@ -81,7 +81,7 @@ object HiltComposableScoped {
     }
 
     @Composable
-    fun GrandChildren() {
+    private fun GrandChildren() {
         val stateHolder = rememberStateHolder()
         Text(
             text = "GrandChildren: $stateHolder",

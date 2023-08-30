@@ -3,19 +3,19 @@ package io.github.fornewid.dagger.hilt.example
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.fornewid.dagger.hilt.example.databinding.ExampleActivityBinding
 import io.github.fornewid.feature.bar.BarNavigator
-import io.github.fornewid.feature.foo.FooNavigator
 import io.github.fornewid.feature.compose.ExampleComposeActivity
 import io.github.fornewid.feature.compose.advanced.AdvancedExampleComposeActivity
-import io.github.fornewid.feature.navigation.fragment.ExampleNavigationFragmentActivity
+import io.github.fornewid.feature.foo.FooNavigator
 import io.github.fornewid.feature.navigation.compose.ExampleNavigationComposeActivity
+import io.github.fornewid.feature.navigation.fragment.ExampleNavigationFragmentActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ExampleActivity : FragmentActivity() {
+class ExampleActivity : AppCompatActivity() {
 
     @Inject
     lateinit var fooNavigator: FooNavigator
