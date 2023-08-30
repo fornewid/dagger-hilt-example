@@ -15,8 +15,8 @@ import io.github.fornewid.core.compose.ExampleTheme
 import io.github.fornewid.feature.bar.Bar
 import io.github.fornewid.feature.compose.hilt.ComposableComponent
 import io.github.fornewid.feature.compose.hilt.ComposableScoped
-import io.github.fornewid.feature.compose.hilt.ComposeEntryPointAccessors
 import io.github.fornewid.feature.compose.hilt.HiltComposable
+import io.github.fornewid.feature.compose.hilt.fromComposable
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -90,7 +90,7 @@ object HiltComposableScoped {
 
     @Composable
     private fun rememberStateHolder(): ExampleStateHolder {
-        val entryPoint = ComposeEntryPointAccessors.fromComposable(ExampleEntryPoint::class.java)
+        val entryPoint = fromComposable(ExampleEntryPoint::class.java)
         return remember {
             entryPoint.exampleStateHolder()
         }
