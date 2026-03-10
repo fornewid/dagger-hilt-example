@@ -14,8 +14,6 @@ dependencies {
     implementation project(':feature-bar-api')
     implementation project(':feature-work-api')
 
-    implementation libs.androidx.core
-
     implementation libs.androidx.work.runtime
     implementation libs.androidx.hilt.work
     ksp libs.androidx.hilt.compiler
