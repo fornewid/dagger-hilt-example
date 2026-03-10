@@ -12,6 +12,7 @@ java {
 dependencies {
     compileOnly(libs.android.pluginGradle)
     compileOnly(libs.kotlin.pluginGradle)
+    compileOnly(libs.ksp.pluginGradle)
     compileOnly(libs.dagger.hilt.pluginGradle)
 }
 

@@ -47,7 +47,7 @@ dependencies {
 
     implementation libs.androidx.work.runtime
     implementation libs.androidx.hilt.work
-    kapt libs.androidx.hilt.compiler
+    ksp libs.androidx.hilt.compiler
 
     implementation libs.androidx.lifecycle.viewmodel.ktx
     implementation libs.androidx.lifecycle.service
