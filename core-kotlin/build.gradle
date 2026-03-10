@@ -12,7 +12,6 @@ android {
 
 dependencies {
     implementation libs.coroutines.android
-    implementation libs.androidx.core
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit

@@ -10,8 +10,6 @@ android {
 }
 
 dependencies {
-    implementation libs.androidx.core
-
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit
     androidTestImplementation libs.test.espresso.core
