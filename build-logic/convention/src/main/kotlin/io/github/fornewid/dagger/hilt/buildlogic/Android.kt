@@ -1,24 +1,13 @@
 package io.github.fornewid.dagger.hilt.buildlogic
 
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
 
 fun Project.configureAndroid() {
-    android {
-        compileSdkVersion(Versions.compileSdk)
-        defaultConfig {
-            minSdk = Versions.minSdk
-            targetSdk = Versions.targetSdk
-        }
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
-        }
-    }
-}
-
-private fun Project.android(action: BaseExtension.() -> Unit) {
-    extensions.configure(action)
+    val android = extensions.getByName("android") as CommonExtension
+    android.compileSdk = Versions.compileSdk
+    android.defaultConfig.minSdk = Versions.minSdk
+    android.compileOptions.sourceCompatibility = JavaVersion.VERSION_17
+    android.compileOptions.targetCompatibility = JavaVersion.VERSION_17
 }
