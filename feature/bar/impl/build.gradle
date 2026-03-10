@@ -4,14 +4,15 @@ plugins {
 }
 
 android {
-    namespace 'io.github.fornewid.feature.foo.impl'
+    namespace 'io.github.fornewid.feature.bar.impl'
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
 dependencies {
-    implementation project(':feature-foo-api')
+    implementation project(':feature:bar:api')
+    implementation project(':feature:foo:api')
     implementation project(':data')
 
     implementation libs.androidx.activity

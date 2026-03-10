@@ -4,20 +4,19 @@ plugins {
 }
 
 android {
-    namespace 'io.github.fornewid.feature.bar.impl'
+    namespace 'io.github.fornewid.feature.work.impl'
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
 dependencies {
-    implementation project(':feature-bar-api')
-    implementation project(':feature-foo-api')
-    implementation project(':data')
+    implementation project(':feature:bar:api')
+    implementation project(':feature:work:api')
 
-    implementation libs.androidx.activity
-    implementation libs.androidx.constraintlayout
-    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.work.runtime
+    implementation libs.androidx.hilt.work
+    ksp libs.androidx.hilt.compiler
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit
