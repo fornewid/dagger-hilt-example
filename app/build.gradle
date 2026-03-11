@@ -24,19 +24,19 @@ android {
 //}
 
 dependencies {
-    implementation project(':feature-foo-api')
-    runtimeOnly project(':feature-foo-impl')
+    implementation project(':feature:foo:api')
+    runtimeOnly project(':feature:foo:impl')
 
-    implementation project(':feature-bar-api')
-    runtimeOnly project(':feature-bar-impl')
+    implementation project(':feature:bar:api')
+    runtimeOnly project(':feature:bar:impl')
 
-    implementation project(':feature-work-api')
-    runtimeOnly project(':feature-work-impl')
+    implementation project(':feature:work:api')
+    runtimeOnly project(':feature:work:impl')
 
-    implementation project(':feature-navigation-fragment')
-    implementation project(':feature-navigation-compose')
+    implementation project(':feature:navigation:fragment')
+    implementation project(':feature:navigation:compose')
 
-    implementation project(':feature-compose')
+    implementation project(':feature:compose')
 
     implementation libs.kotlin.stdlib
 

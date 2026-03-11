@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    implementation project(':feature-bar-api')
+    implementation project(':feature:bar:api')
 
     implementation libs.androidx.fragment
 

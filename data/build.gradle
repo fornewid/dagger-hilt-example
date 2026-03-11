@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    implementation project(':core-kotlin')
+    implementation project(':core:kotlin')
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit
