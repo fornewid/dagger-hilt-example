@@ -25,13 +25,13 @@ android {
 
 dependencies {
     implementation project(':feature:foo:api')
-    runtimeOnly project(':feature:foo:impl')
+    runtimeOnly project(':feature:foo:bindings')
 
     implementation project(':feature:bar:api')
-    runtimeOnly project(':feature:bar:impl')
+    runtimeOnly project(':feature:bar:bindings')
 
     implementation project(':feature:work:api')
-    runtimeOnly project(':feature:work:impl')
+    runtimeOnly project(':feature:work:bindings')
 
     implementation project(':feature:navigation:fragment')
     implementation project(':feature:navigation:compose')

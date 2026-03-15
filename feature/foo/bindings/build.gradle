@@ -1,9 +1,10 @@
 plugins {
     id 'example.android.library'
+    id 'example.android.hilt'
 }
 
 android {
-    namespace 'io.github.fornewid.feature.foo.impl'
+    namespace 'io.github.fornewid.feature.foo.bindings'
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -11,8 +12,12 @@ android {
 
 dependencies {
     implementation project(':feature:foo:api')
+    implementation project(':feature:foo:impl')
+    implementation project(':data')
 
-    compileOnly 'javax.inject:javax.inject:1'
+    implementation libs.androidx.activity
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.lifecycle.viewmodel.ktx
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit

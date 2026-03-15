@@ -1,6 +1,5 @@
 plugins {
     id 'example.android.library'
-    id 'example.android.hilt'
 }
 
 android {
@@ -15,8 +14,8 @@ dependencies {
     implementation project(':feature:work:api')
 
     implementation libs.androidx.work.runtime
-    implementation libs.androidx.hilt.work
-    ksp libs.androidx.hilt.compiler
+
+    compileOnly 'javax.inject:javax.inject:1'
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit
