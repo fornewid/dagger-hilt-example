@@ -15,6 +15,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions "default"
+    productFlavors {
+        dev {}
+        stage {}
+        real {}
+    }
 }
 
 // Turn ON enableAggregatingTask by default in Dagger Hilt 2.40
@@ -37,6 +44,8 @@ dependencies {
     implementation project(':feature:navigation:compose')
 
     implementation project(':feature:compose')
+
+    implementation project(':buildconfig')
 
     implementation libs.kotlin.stdlib
 

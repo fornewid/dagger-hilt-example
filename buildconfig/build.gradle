@@ -1,0 +1,28 @@
+plugins {
+    id 'example.android.library'
+}
+
+android {
+    namespace 'io.github.fornewid.dagger.hilt.example.buildconfig'
+
+    defaultConfig {
+        buildConfigField "String", "VERSION_NAME", "String.valueOf(\"1.0\")"
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            buildConfigField "String", "API_BASE_URL", "String.valueOf(\"https://dev.example.com\")"
+        }
+        stage {
+            buildConfigField "String", "API_BASE_URL", "String.valueOf(\"https://stage.example.com\")"
+        }
+        real {
+            buildConfigField "String", "API_BASE_URL", "String.valueOf(\"https://real.example.com\")"
+        }
+    }
+}

@@ -13,6 +13,8 @@ android {
 dependencies {
     implementation project(':core:kotlin')
 
+    compileOnly project(':buildconfig-stub')
+
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit
     androidTestImplementation libs.test.espresso.core
