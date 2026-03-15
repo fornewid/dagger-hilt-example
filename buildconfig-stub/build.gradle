@@ -1,0 +1,18 @@
+plugins {
+    id 'example.android.library'
+}
+
+android {
+    namespace 'io.github.fornewid.dagger.hilt.example.buildconfig'
+
+    defaultConfig {
+        buildConfigField "String", "VERSION_NAME", "String.valueOf(\"\")"
+        buildConfigField "String", "API_BASE_URL", "String.valueOf(\"\")"
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    // productFlavors 없음 — flavor 전파 방지
+}

@@ -16,6 +16,8 @@ dependencyResolutionManagement {
 }
 
 include ':app'
+include ':buildconfig'
+include ':buildconfig-stub'
 include ':feature:foo:api'
 include ':feature:foo:impl'
 include ':feature:bar:api'
