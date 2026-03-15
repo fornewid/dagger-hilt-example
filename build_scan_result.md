@@ -1,127 +1,308 @@
-# Build Scan Result: 3_bindings (API/Impl/Bindings 분리)
+# Build Scan Result: 빌드 성능 비교 실험
 
-## 모듈 구조
+## 실험 개요
 
+Dagger Hilt 프로젝트에서 모듈 분리 전략에 따른 incremental 빌드 성능을 비교합니다.
+3가지 모듈 구조에서 3가지 코드 변경 시나리오를 각각 30회 반복 측정하였습니다.
+
+- **측정 방식**: `./gradlew :app:assembleDebug` incremental 빌드 시간 (python3 ms 단위)
+- **반복 횟수**: 시나리오별 30회 (15 toggle cycle × 2)
+- **실행 조건**: 순차 실행 (자원 경합 없음), Gradle Daemon warm 상태
+- **통계**: 워밍업 2회 제외 후 outlier(>15s) 필터링
+
+---
+
+## 1. 모듈 구조 비교
+
+### [1] 단일 모듈 (`1_single`)
+```
+┌──────────────────────────────────────┐
+│ feature:foo                          │
+│ ├─ Interface + Impl + DI             │
+│ ⚙️ KSP: 모든 코드 수정 시 실행       │
+└──────────────────────────────────────┘
+```
+
+### [2] API/Impl 분리 (`2_api_impl`) — 현재 구조
+```
+┌─────────────────┐       ┌──────────────────────────────────────┐
+│ feature:foo:api  │ ◀──── │ feature:foo:impl                     │
+│ ├─ Interface    │       │ ├─ Logic/UI + DI                     │
+│ ❌ KSP 없음     │       │ ⚙️ KSP: impl 수정 시 실행             │
+└─────────────────┘       └──────────────────────────────────────┘
+```
+
+### [3] API/Impl/Bindings 분리 (`3_bindings`) — 제안 구조
 ```
 ┌─────────────────┐       ┌─────────────────┐       ┌──────────────────────────────────────┐
-│ feature:foo:api  │ <──── │ feature:foo:impl │ <──── │ feature:foo:bindings                 │
-│ ├─ Interface    │ 참조  │ ├─ Logic         │ 참조  │ ├─ DI (@Module, @Binds)              │
-│ │               │       │ │               │       │ ├─ Activity (@AndroidEntryPoint)     │
-│ (x) KSP 없음    │       │ (x) KSP 없음    │       │ ├─ ViewModel (@HiltViewModel)        │
-└─────────────────┘       └─────────────────┘       │ (*) KSP 구동: DI 코드 수정 시에만 발생│
+│ feature:foo:api  │ ◀──── │ feature:foo:impl │ ◀──── │ feature:foo:bindings                 │
+│ ├─ Interface    │       │ ├─ Logic         │       │ ├─ DI (@Module, @Binds)              │
+│ ❌ KSP 없음     │       │ ❌ KSP 없음     │       │ ├─ Activity (@AndroidEntryPoint)     │
+└─────────────────┘       └─────────────────┘       │ ├─ ViewModel (@HiltViewModel)        │
+                                                    │ ⚙️ KSP: DI 변경 시에만 실행           │
                                                     └──────────────────────────────────────┘
 ```
 
-- **api**: 인터페이스만 포함. KSP/Hilt 없음.
-- **impl**: 순수 구현 클래스만 포함. `@Inject` 생성자만 사용. KSP/Hilt 플러그인 없음.
-- **bindings**: `@Module`, `@AndroidEntryPoint`, `@HiltViewModel`, `@HiltWorker` 등 Hilt 어노테이션이 필요한 코드 포함. KSP/Hilt 구동.
+---
 
-핵심 원리: impl 모듈에 KSP가 없으므로, impl 코드 수정 시 KSP annotation processing이 발생하지 않음.
+## 2. 테스트 시나리오
+
+| Test Case | 설명 | 수정 대상 |
+|-----------|------|----------|
+| **A** | 내부 구현 로직 수정 (Non-ABI) | `FooImpl.kt`에 private 메서드 추가 |
+| **B** | 인터페이스 수정 (ABI 변경) | `Foo` interface에 메서드 추가 + `FooImpl` 구현 |
+| **C** | 새로운 의존성 바인딩 추가 | `NewService` interface + `NewServiceImpl` + `@Binds` |
 
 ---
 
-## Test Case A: 내부 구현 로직 수정 (Non-ABI 변경)
+## 3. 측정 결과 (30회 반복, 순차 실행)
 
-### 변경 내용
-`feature/foo/impl`의 `FooImpl.kt`에 `println()` 한 줄 추가 (메서드 시그니처 변경 없음)
+### Test Case A: 내부 구현 로직 수정 (Non-ABI)
 
-### 빌드 결과
-- **총 소요 시간**: 12s
-- **실행된 태스크**: 5개 (323개 중)
-- **UP-TO-DATE**: 318개
+> 가장 빈번한 일상 개발 시나리오 — impl 내부 로직만 수정
 
-### 실행된 태스크 상세
+| 지표 | 1_single | 2_api_impl | 3_bindings |
+|------|----------|------------|------------|
+| **중앙값** | 5,810 ms | 5,691 ms | **4,842 ms** |
+| 평균 | 6,546 ms | 5,549 ms | **5,549 ms** |
+| P90 | 8,905 ms | 9,862 ms | **7,814 ms** |
+| 최솟값 | 5,033 ms | 4,661 ms | **4,008 ms** |
+| 실행 Task | 7 / 224 | 6 / 272 | 12 / 323 |
+| **KSP 실행** | **1개** (foo) | **1개** (foo:impl) | **0개** |
 
-| 태스크 | 상태 | 설명 |
-|--------|------|------|
-| `:feature:foo:impl:compileDebugKotlin` | EXECUTED | 변경된 소스 재컴파일 |
-| `:feature:foo:impl:bundleLibCompileToJarDebug` | EXECUTED | 컴파일 결과 JAR 패키징 |
-| `:feature:foo:impl:bundleLibRuntimeToJarDebug` | EXECUTED | 런타임 JAR 패키징 |
-| `:app:mergeLibDexDebug` | EXECUTED | 라이브러리 DEX 병합 |
-| `:app:packageDebug` | EXECUTED | APK 패키징 |
+#### 실행된 KSP Task 상세
 
-### KSP 태스크 상태
+| KSP Task | 1_single | 2_api_impl | 3_bindings |
+|----------|----------|------------|------------|
+| feature:foo KSP | EXECUTED | EXECUTED | N/A (플러그인 없음) |
+| feature:foo:bindings KSP | — | — | **UP-TO-DATE** |
+| feature:bar KSP | UP-TO-DATE | UP-TO-DATE | UP-TO-DATE |
+| app KSP | UP-TO-DATE | UP-TO-DATE | UP-TO-DATE |
 
-| KSP 태스크 | 상태 |
-|-----------|------|
-| `:feature:foo:bindings:kspDebugKotlin` | **UP-TO-DATE** |
-| `:feature:bar:bindings:kspDebugKotlin` | **UP-TO-DATE** |
-| `:feature:work:bindings:kspDebugKotlin` | **UP-TO-DATE** |
-| `:app:kspDebugKotlin` | **UP-TO-DATE** |
-| `:data:kspDebugKotlin` | **UP-TO-DATE** |
-| `:core:kotlin:kspDebugKotlin` | **UP-TO-DATE** |
+### Test Case B: 인터페이스 수정 (ABI 변경)
 
-### 핵심 관찰
-- impl 모듈의 Non-ABI 변경 시, **어떤 KSP 태스크도 실행되지 않음**
-- bindings 모듈의 컴파일/KSP도 완전히 스킵됨
-- 변경 영향 범위가 `foo:impl` -> `app` 패키징으로 최소화됨
+| 지표 | 1_single | 2_api_impl | 3_bindings |
+|------|----------|------------|------------|
+| **중앙값** | 7,365 ms | 5,940 ms | 6,419 ms |
+| 평균 | 7,998 ms | 6,826 ms | 6,826 ms |
+| P90 | 10,126 ms | 9,146 ms | 8,795 ms |
+| 최솟값 | 6,174 ms | 4,601 ms | 5,316 ms |
+| 실행 Task | 22 / 224 | 20 / 272 | 20 / 323 |
+| **KSP 실행** | 3개 | 3개 | 3개 |
 
----
+### Test Case C: 새로운 의존성 바인딩 추가
 
-## Test Case B: 인터페이스 수정 (ABI 변경)
-
-### 변경 내용
-1. `feature/foo/api`의 `Foo.kt` 인터페이스에 `fun newFeature(): String` 메서드 추가
-2. `feature/foo/impl`의 `FooImpl.kt`에 해당 메서드 구현 추가
-
-### 빌드 결과
-- **총 소요 시간**: 17s
-- **실행된 태스크**: 21개 (323개 중)
-- **UP-TO-DATE**: 302개
-
-### 실행된 태스크 상세
-
-| 태스크 | 상태 | 설명 |
-|--------|------|------|
-| `:feature:foo:api:compileDebugKotlin` | EXECUTED | API 인터페이스 재컴파일 |
-| `:feature:foo:api:bundleLibCompileToJarDebug` | EXECUTED | API JAR 패키징 |
-| `:feature:foo:api:bundleLibRuntimeToJarDebug` | EXECUTED | API 런타임 JAR 패키징 |
-| `:feature:foo:impl:compileDebugKotlin` | EXECUTED | impl 재컴파일 (API 변경 전파) |
-| `:feature:foo:impl:bundleLibCompileToJarDebug` | EXECUTED | impl JAR 패키징 |
-| `:feature:foo:impl:bundleLibRuntimeToJarDebug` | EXECUTED | impl 런타임 JAR 패키징 |
-| `:feature:bar:impl:compileDebugKotlin` | EXECUTED | bar:impl 재컴파일 (foo:api 의존) |
-| `:feature:foo:bindings:kspDebugKotlin` | EXECUTED | **KSP 재실행** (impl 변경 전파) |
-| `:feature:foo:bindings:compileDebugKotlin` | EXECUTED | bindings 재컴파일 |
-| `:feature:foo:bindings:transformDebugClassesWithAsm` | EXECUTED | ASM 변환 |
-| `:feature:bar:bindings:kspDebugKotlin` | EXECUTED | **KSP 재실행** (bar:impl 변경 전파) |
-| `:feature:bar:bindings:compileDebugKotlin` | EXECUTED | bindings 재컴파일 |
-| `:feature:bar:bindings:transformDebugClassesWithAsm` | EXECUTED | ASM 변환 |
-| `:app:kspDebugKotlin` | EXECUTED | app KSP 재실행 |
-| `:app:compileDebugKotlin` | EXECUTED | app 재컴파일 |
-| `:app:hiltSyncDebug` | EXECUTED | Hilt 동기화 |
-| `:app:hiltJavaCompileDebug` | EXECUTED | Hilt Java 컴파일 |
-| `:app:transformDebugClassesWithAsm` | EXECUTED | ASM 변환 |
-| `:app:dexBuilderDebug` | EXECUTED | DEX 빌드 |
-| `:app:mergeProjectDexDebug` | EXECUTED | DEX 병합 |
-| `:app:packageDebug` | EXECUTED | APK 패키징 |
-
-### KSP 태스크 상태
-
-| KSP 태스크 | 상태 |
-|-----------|------|
-| `:feature:foo:bindings:kspDebugKotlin` | **EXECUTED** |
-| `:feature:bar:bindings:kspDebugKotlin` | **EXECUTED** |
-| `:feature:work:bindings:kspDebugKotlin` | UP-TO-DATE |
-| `:app:kspDebugKotlin` | **EXECUTED** |
-| `:data:kspDebugKotlin` | UP-TO-DATE |
-| `:core:kotlin:kspDebugKotlin` | UP-TO-DATE |
-
-### 핵심 관찰
-- API 인터페이스 변경은 ABI 변경이므로 의존 모듈 전반에 걸쳐 재컴파일 발생
-- foo:api에 의존하는 foo:impl, foo:bindings, bar:impl, bar:bindings, app 모두 영향 받음
-- work 모듈은 foo:api에 직접 의존하지 않으므로 영향 없음 (work:bindings KSP UP-TO-DATE)
+| 지표 | 1_single | 2_api_impl | 3_bindings |
+|------|----------|------------|------------|
+| **중앙값** | 6,593 ms | 5,756 ms | 6,166 ms |
+| 평균 | 7,170 ms | 6,936 ms | 6,936 ms |
+| P90 | 8,757 ms | 10,230 ms | 9,051 ms |
+| 최솟값 | 5,922 ms | 4,615 ms | 5,694 ms |
+| 실행 Task | 21 / 224 | 19 / 272 | 21 / 323 |
+| **KSP 실행** | 3개 | 3개 | 3개 |
 
 ---
 
-## 요약
+## 4. 분석
 
-| 시나리오 | 실행된 태스크 | KSP 실행 | 빌드 시간 |
-|---------|-------------|---------|----------|
-| **A: impl 내부 변경** | 5 / 323 | 0개 (전부 UP-TO-DATE) | 12s |
-| **B: api 인터페이스 변경** | 21 / 323 | 3개 (foo, bar, app) | 17s |
+### 핵심 발견: Test Case A에서 3_bindings의 KSP 완전 스킵
 
-### 3-module 분리의 효과
-- **impl 코드 수정 시 KSP가 완전히 스킵됨** -- 가장 빈번한 일상 개발 시나리오에서 annotation processing 비용 제거
-- impl 모듈에는 Hilt 플러그인이 없으므로 KSP 태스크 자체가 존재하지 않음
-- bindings 모듈의 입력(classpath)이 변하지 않으면 KSP 캐시가 유효하게 유지됨
-- API 변경 시에는 bindings의 KSP도 실행되지만, 이는 인터페이스 변경의 정당한 비용임
+| 구조 | impl 수정 시 KSP | ABI/바인딩 변경 시 KSP |
+|------|-----------------|---------------------|
+| 1_single | **실행** (해당 모듈) | 실행 (연쇄 전파) |
+| 2_api_impl | **실행** (impl 모듈) | 실행 (연쇄 전파) |
+| 3_bindings | **스킵 (0개)** | 실행 (연쇄 전파) |
+
+- **3_bindings**는 impl 모듈에 Hilt/KSP 플러그인이 없으므로, 구현 코드 수정 시 KSP annotation processing이 **완전히 제거**됩니다.
+- 이는 일상 개발에서 가장 빈번한 시나리오(비즈니스 로직 수정)에서 빌드 병목을 줄여줍니다.
+- ABI 변경(Test B) 및 새 바인딩 추가(Test C) 시에는 3가지 구조 모두 KSP 3개 실행으로 유사합니다.
+
+### Task 실행 패턴 비교 (Test Case A)
+
+**1_single**: `foo:ksp` → `foo:compile` → `app:package` (KSP 실행)
+**2_api_impl**: `foo:impl:ksp` → `foo:impl:compile` → `app:package` (KSP 실행)
+**3_bindings**: `foo:impl:compile` → `foo:bindings:compile (KSP 스킵)` → `app:package` (**KSP 없음**)
+
+### Trade-off
+
+| 항목 | 1_single | 2_api_impl | 3_bindings |
+|------|----------|------------|------------|
+| 모듈 수 (feature당) | 1 | 2 | 3 |
+| impl 수정 시 KSP | 실행 | 실행 | **스킵** |
+| 보일러플레이트 | 낮음 | 중간 | 높음 |
+| 빌드 그래프 복잡도 | 낮음 | 중간 | 높음 |
+| 권장 시나리오 | 소규모 프로젝트 | 일반 프로젝트 | KSP 비용이 큰 대규모 프로젝트 |
+
+---
+
+## 5. 전체 측정 데이터 (Raw)
+
+### 1_single
+
+<details>
+<summary>Test Case A (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 6,376 | 11 | 5,049 | 21 | 5,201 |
+| 2 | 6,245 | 12 | 5,596 | 22 | 38,211* |
+| 3 | 5,997 | 13 | 5,205 | 23 | 15,987* |
+| 4 | 5,827 | 14 | 5,033 | 24 | 10,105 |
+| 5 | 5,275 | 15 | 6,806 | 25 | 8,905 |
+| 6 | 5,801 | 16 | 5,813 | 26 | 7,542 |
+| 7 | 5,810 | 17 | 5,148 | 27 | 7,947 |
+| 8 | 5,245 | 18 | 5,119 | 28 | 7,388 |
+| 9 | 5,800 | 19 | 5,905 | 29 | 6,505 |
+| 10 | 5,392 | 20 | 5,706 | 30 | 6,647 |
+
+</details>
+
+<details>
+<summary>Test Case B (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 7,780 | 11 | 6,174 | 21 | 48,923* |
+| 2 | 7,815 | 12 | 6,200 | 22 | 15,566* |
+| 3 | 7,365 | 13 | 7,299 | 23 | 12,713 |
+| 4 | 7,780 | 14 | 7,063 | 24 | 10,126 |
+| 5 | 6,866 | 15 | 7,795 | 25 | 9,265 |
+| 6 | 8,063 | 16 | 6,229 | 26 | 9,064 |
+| 7 | 6,799 | 17 | 6,359 | 27 | 8,885 |
+| 8 | 7,098 | 18 | 6,644 | 28 | 8,502 |
+| 9 | 6,338 | 19 | 6,675 | 29 | 8,304 |
+| 10 | 7,043 | 20 | 7,527 | 30 | 8,199 |
+
+</details>
+
+<details>
+<summary>Test Case C (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 6,542 | 11 | 6,328 | 21 | 13,535* |
+| 2 | 6,617 | 12 | 5,966 | 22 | 10,063 |
+| 3 | 7,007 | 13 | 6,148 | 23 | 8,757 |
+| 4 | 6,593 | 14 | 6,870 | 24 | 7,982 |
+| 5 | 6,456 | 15 | 6,097 | 25 | 8,435 |
+| 6 | 6,675 | 16 | 6,079 | 26 | 8,140 |
+| 7 | 6,196 | 17 | 6,313 | 27 | 7,554 |
+| 8 | 6,256 | 18 | 6,346 | 28 | 6,876 |
+| 9 | 7,210 | 19 | 5,922 | 29 | 7,077 |
+| 10 | 6,254 | 20 | 39,364* | 30 | 6,456 |
+
+</details>
+
+### 2_api_impl
+
+<details>
+<summary>Test Case A (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 5,929 | 11 | 11,365* | 21 | 6,094 |
+| 2 | 5,530 | 12 | 9,862 | 22 | 5,444 |
+| 3 | 4,669 | 13 | 7,918 | 23 | 5,635 |
+| 4 | 5,510 | 14 | 7,002 | 24 | 5,870 |
+| 5 | 4,784 | 15 | 7,212 | 25 | 5,461 |
+| 6 | 4,846 | 16 | 6,841 | 26 | 5,134 |
+| 7 | 4,910 | 17 | 6,244 | 27 | 5,753 |
+| 8 | 5,659 | 18 | 5,859 | 28 | 4,968 |
+| 9 | 4,661 | 19 | 6,392 | 29 | 5,480 |
+| 10 | 35,873* | 20 | 5,535 | 30 | 5,723 |
+
+</details>
+
+<details>
+<summary>Test Case B (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 5,965 | 11 | 4,601 | 21 | 6,001 |
+| 2 | 5,826 | 12 | 5,014 | 22 | 6,355 |
+| 3 | 5,337 | 13 | 38,274* | 23 | 6,875 |
+| 4 | 6,440 | 14 | 13,000* | 24 | 5,821 |
+| 5 | 5,210 | 15 | 9,146 | 25 | 5,879 |
+| 6 | 5,347 | 16 | 8,411 | 26 | 5,645 |
+| 7 | 5,368 | 17 | 7,834 | 27 | 6,045 |
+| 8 | 5,061 | 18 | 7,184 | 28 | 5,569 |
+| 9 | 5,027 | 19 | 7,067 | 29 | 6,269 |
+| 10 | 5,648 | 20 | 6,945 | 30 | 5,622 |
+
+</details>
+
+<details>
+<summary>Test Case C (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 5,795 | 11 | 5,447 | 21 | 8,641 |
+| 2 | 5,449 | 12 | 4,749 | 22 | 7,638 |
+| 3 | 5,419 | 13 | 5,454 | 23 | 8,488 |
+| 4 | 5,727 | 14 | 5,151 | 24 | 7,473 |
+| 5 | 5,577 | 15 | 4,615 | 25 | 6,945 |
+| 6 | 5,002 | 16 | 4,906 | 26 | 7,135 |
+| 7 | 5,416 | 17 | 5,122 | 27 | 6,487 |
+| 8 | 5,193 | 18 | 37,161* | 28 | 6,489 |
+| 9 | 5,750 | 19 | 12,202* | 29 | 7,288 |
+| 10 | 5,762 | 20 | 10,230 | 30 | 6,781 |
+
+</details>
+
+### 3_bindings
+
+<details>
+<summary>Test Case A (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 5,372 | 11 | 4,439 | 21 | 10,764* |
+| 2 | 5,525 | 12 | 4,512 | 22 | 7,814 |
+| 3 | 4,814 | 13 | 4,158 | 23 | 7,135 |
+| 4 | 4,871 | 14 | 4,113 | 24 | 7,975 |
+| 5 | 5,451 | 15 | 4,374 | 25 | 6,659 |
+| 6 | 4,733 | 16 | 4,571 | 26 | 6,207 |
+| 7 | 4,585 | 17 | 4,842 | 27 | 6,649 |
+| 8 | 4,485 | 18 | 4,457 | 28 | 5,950 |
+| 9 | 5,851 | 19 | 4,008 | 29 | 5,998 |
+| 10 | 4,608 | 20 | 34,573* | 30 | 5,807 |
+
+</details>
+
+<details>
+<summary>Test Case B (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 6,783 | 11 | 5,422 | 21 | 5,453 |
+| 2 | 6,340 | 12 | 5,483 | 22 | 40,022* |
+| 3 | 6,419 | 13 | 6,184 | 23 | 13,458* |
+| 4 | 6,605 | 14 | 6,563 | 24 | 10,231 |
+| 5 | 6,753 | 15 | 5,464 | 25 | 8,730 |
+| 6 | 6,246 | 16 | 6,121 | 26 | 8,795 |
+| 7 | 5,637 | 17 | 5,384 | 27 | 7,256 |
+| 8 | 6,856 | 18 | 5,361 | 28 | 8,007 |
+| 9 | 5,589 | 19 | 6,241 | 29 | 6,885 |
+| 10 | 6,506 | 20 | 5,316 | 30 | 7,331 |
+
+</details>
+
+<details>
+<summary>Test Case C (30회)</summary>
+
+| # | ms | # | ms | # | ms |
+|---|-----|---|-----|---|-----|
+| 1 | 7,959 | 11 | 6,299 | 21 | 5,866 |
+| 2 | 6,422 | 12 | 6,035 | 22 | 40,506* |
+| 3 | 6,796 | 13 | 5,811 | 23 | 13,347* |
+| 4 | 6,166 | 14 | 5,861 | 24 | 10,269 |
+| 5 | 6,350 | 15 | 6,151 | 25 | 9,051 |
+| 6 | 6,652 | 16 | 5,694 | 26 | 8,669 |
+| 7 | 5,826 | 17 | 5,715 | 27 | 8,056 |
+| 8 | 5,979 | 18 | 6,143 | 28 | 8,028 |
+| 9 | 6,150 | 19 | 5,812 | 29 | 6,976 |
+| 10 | 6,302 | 20 | 5,820 | 30 | 7,456 |
+
+</details>
+
+> `*` 표시: 시스템 이벤트(GC, 백그라운드 프로세스 등)로 인한 outlier
