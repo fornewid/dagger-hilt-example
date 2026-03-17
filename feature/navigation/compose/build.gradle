@@ -2,7 +2,6 @@ plugins {
     id 'example.android.library'
     id 'example.android.compose'
     id 'example.android.dagger'
-    id 'example.android.anvil'
 }
 
 android {
@@ -13,8 +12,6 @@ android {
 }
 
 dependencies {
-    implementation project(':core:compose')
-    implementation project(':core:kotlin')
     implementation project(':feature:bar:api')
     implementation libs.compose.foundation
     implementation libs.compose.material

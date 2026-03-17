@@ -1,7 +1,5 @@
 plugins {
     id 'example.android.library'
-    id 'example.android.dagger'
-    id 'example.android.anvil'
 }
 
 android {
@@ -17,8 +15,7 @@ dependencies {
     implementation project(':core:kotlin')
     implementation project(':data')
 
-    implementation libs.androidx.activity
-    implementation libs.androidx.constraintlayout
+    implementation libs.dagger.core
     implementation libs.androidx.lifecycle.viewmodel.ktx
 
     testImplementation libs.junit

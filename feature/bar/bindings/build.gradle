@@ -1,0 +1,20 @@
+plugins {
+    id 'example.android.library'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
+}
+
+android {
+    namespace 'io.github.fornewid.feature.bar.bindings'
+}
+
+dependencies {
+    implementation project(':feature:bar:api')
+    implementation project(':feature:bar:impl')
+    implementation project(':data')
+    implementation project(':core:kotlin')
+
+    implementation libs.androidx.activity
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+}

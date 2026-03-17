@@ -1,7 +1,5 @@
 plugins {
     id 'example.android.library'
-    id 'example.android.dagger'
-    id 'example.android.anvil'
 }
 
 android {
@@ -16,7 +14,7 @@ dependencies {
     implementation project(':feature:work:api')
     implementation project(':core:kotlin')
 
-    implementation libs.androidx.work.runtime
+    implementation libs.dagger.core
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit

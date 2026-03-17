@@ -7,13 +7,13 @@ import io.github.fornewid.core.kotlin.AppScope
 import io.github.fornewid.core.kotlin.DaggerViewModelFactory
 import io.github.fornewid.core.kotlin.DaggerWorkerFactory
 import io.github.fornewid.feature.bar.Bar
-import io.github.fornewid.feature.bar.impl.BarInjector
-import io.github.fornewid.feature.compose.ComposeInjector
-import io.github.fornewid.feature.compose.InjectorEntryPoints
+import io.github.fornewid.feature.bar.bindings.BarInjector
+import io.github.fornewid.feature.compose.bindings.ComposeInjector
+import io.github.fornewid.feature.compose.bindings.InjectorEntryPoints
 import io.github.fornewid.feature.compose.hilt.ComposableComponentFactoryProvider
-import io.github.fornewid.feature.foo.impl.FooInjector
-import io.github.fornewid.feature.navigation.compose.NavigationComposeInjector
-import io.github.fornewid.feature.navigation.fragment.NavigationFragmentInjector
+import io.github.fornewid.feature.foo.bindings.FooInjector
+import io.github.fornewid.feature.navigation.compose.bindings.NavigationComposeInjector
+import io.github.fornewid.feature.navigation.fragment.bindings.NavigationFragmentInjector
 import javax.inject.Singleton
 
 @MergeComponent(AppScope::class)

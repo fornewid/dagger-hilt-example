@@ -27,21 +27,29 @@ android {
 
 dependencies {
     implementation project(':core:kotlin')
+    implementation project(':core:kotlin:bindings')
     implementation project(':data')
+    implementation project(':data:bindings')
 
     implementation project(':feature:foo:api')
     implementation project(':feature:foo:impl')
+    implementation project(':feature:foo:bindings')
 
     implementation project(':feature:bar:api')
     implementation project(':feature:bar:impl')
+    implementation project(':feature:bar:bindings')
 
     implementation project(':feature:work:api')
     implementation project(':feature:work:impl')
+    implementation project(':feature:work:bindings')
 
     implementation project(':feature:navigation:fragment')
+    implementation project(':feature:navigation:fragment:bindings')
     implementation project(':feature:navigation:compose')
+    implementation project(':feature:navigation:compose:bindings')
 
     implementation project(':feature:compose')
+    implementation project(':feature:compose:bindings')
 
     implementation project(':buildconfig')
 

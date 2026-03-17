@@ -1,7 +1,6 @@
 plugins {
     id 'example.android.library'
     id 'example.android.dagger'
-    id 'example.android.anvil'
 }
 
 android {
