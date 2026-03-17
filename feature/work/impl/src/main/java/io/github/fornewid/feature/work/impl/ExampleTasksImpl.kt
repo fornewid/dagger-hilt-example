@@ -1,4 +1,4 @@
-package io.github.fornewid.feature.work.bindings
+package io.github.fornewid.feature.work.impl
 
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager

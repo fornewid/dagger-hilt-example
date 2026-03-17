@@ -1,22 +1,21 @@
-package io.github.fornewid.feature.foo.bindings
+package io.github.fornewid.feature.bar.impl
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import io.github.fornewid.core.kotlin.DaggerViewModelFactory
 import io.github.fornewid.core.kotlin.injector
-import io.github.fornewid.feature.foo.impl.FooViewModel
 import javax.inject.Inject
 
-class FooActivity : ComponentActivity(R.layout.foo_activity) {
+class BarActivity : ComponentActivity(R.layout.bar_activity) {
 
     @Inject
     lateinit var viewModelFactory: DaggerViewModelFactory
 
-    private val viewModel: FooViewModel by viewModels { viewModelFactory }
+    private val viewModel: BarViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (injector as FooInjector).inject(this)
+        (injector as BarInjector).inject(this)
         super.onCreate(savedInstanceState)
         viewModel.doSomething()
     }

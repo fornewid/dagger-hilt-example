@@ -39,5 +39,9 @@ gradlePlugin {
             id = "example.android.anvil"
             implementationClass = "AnvilConventionPlugin"
         }
+        register("androidAnvilMerging") {
+            id = "example.android.anvil.merging"
+            implementationClass = "AnvilMergingConventionPlugin"
+        }
     }
 }

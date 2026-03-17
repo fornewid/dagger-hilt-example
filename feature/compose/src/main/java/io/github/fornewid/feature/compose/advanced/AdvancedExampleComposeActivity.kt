@@ -1,4 +1,4 @@
-package io.github.fornewid.feature.compose.bindings.advanced
+package io.github.fornewid.feature.compose.advanced
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,8 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import io.github.fornewid.core.compose.ExampleTheme
 import io.github.fornewid.core.kotlin.injector
-import io.github.fornewid.feature.compose.advanced.ExampleStateHolder
-import io.github.fornewid.feature.compose.bindings.ComposeInjector
+import io.github.fornewid.feature.compose.ComposeInjector
 import io.github.fornewid.feature.compose.hilt.HiltComposable
 import io.github.fornewid.feature.compose.hilt.rememberComposableEntryPoint
 

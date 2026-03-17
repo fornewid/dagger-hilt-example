@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Module
 import io.github.fornewid.core.kotlin.AppScope
 import io.github.fornewid.feature.work.ExampleTasks
+import io.github.fornewid.feature.work.impl.ExampleTasksImpl
 import io.github.fornewid.feature.work.impl.ExampleUseCase
 import io.github.fornewid.feature.work.impl.ExampleUseCaseImpl
 

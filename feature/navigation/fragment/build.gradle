@@ -1,6 +1,7 @@
 plugins {
     id 'example.android.library'
     id 'example.android.dagger'
+    id 'example.android.anvil'
 }
 
 android {
@@ -12,7 +13,10 @@ android {
 
 dependencies {
     implementation project(':feature:bar:api')
+    implementation project(':core:kotlin')
 
+    implementation libs.androidx.fragment
+    implementation libs.androidx.navigation.fragment
     implementation libs.androidx.lifecycle.viewmodel.ktx
 
     testImplementation libs.junit

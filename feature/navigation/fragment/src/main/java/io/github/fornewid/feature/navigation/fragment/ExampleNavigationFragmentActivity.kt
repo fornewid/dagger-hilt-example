@@ -1,10 +1,9 @@
-package io.github.fornewid.feature.navigation.fragment.bindings
+package io.github.fornewid.feature.navigation.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import io.github.fornewid.core.kotlin.DaggerViewModelFactory
 import io.github.fornewid.core.kotlin.injector
-import io.github.fornewid.feature.navigation.fragment.R
 import javax.inject.Inject
 
 class ExampleNavigationFragmentActivity : FragmentActivity(R.layout.example_nav_graph_activity) {

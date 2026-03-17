@@ -10,6 +10,7 @@ import dagger.multibindings.IntoMap
 import io.github.fornewid.core.kotlin.AppScope
 import io.github.fornewid.core.kotlin.WorkerAssistedFactory
 import io.github.fornewid.core.kotlin.WorkerKey
+import io.github.fornewid.feature.work.impl.ExampleWorker
 
 @Module
 @ContributesTo(AppScope::class)
@@ -17,7 +18,7 @@ object ExampleWorkerModule {
 
     @Provides
     @IntoMap
-    @WorkerKey("io.github.fornewid.feature.work.bindings.ExampleWorker")
+    @WorkerKey("io.github.fornewid.feature.work.impl.ExampleWorker")
     fun provideExampleWorkerFactory(factory: ExampleWorker.Factory): WorkerAssistedFactory {
         return object : WorkerAssistedFactory {
             override fun create(context: Context, workerParameters: WorkerParameters): ListenableWorker {

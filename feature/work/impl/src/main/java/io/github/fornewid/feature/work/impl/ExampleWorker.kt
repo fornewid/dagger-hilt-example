@@ -1,4 +1,4 @@
-package io.github.fornewid.feature.work.bindings
+package io.github.fornewid.feature.work.impl
 
 import android.content.Context
 import androidx.work.Worker
@@ -6,7 +6,6 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.github.fornewid.feature.work.impl.ExampleUseCase
 
 class ExampleWorker @AssistedInject constructor(
     @Assisted context: Context,

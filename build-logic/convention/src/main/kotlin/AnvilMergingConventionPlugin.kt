@@ -9,11 +9,10 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 
 /**
- * Anvil factory generation only (lightweight).
- * For impl modules: generates _Factory for @Inject, hints for @ContributesBinding.
- * No Dagger component processing.
+ * Anvil with component merging (full).
+ * For bindings/app modules: factory generation + @MergeComponent processing.
  */
-class AnvilConventionPlugin : Plugin<Project> {
+class AnvilMergingConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
@@ -25,7 +24,7 @@ class AnvilConventionPlugin : Plugin<Project> {
             extensions.configure<AnvilExtension> {
                 useKsp(
                     contributesAndFactoryGeneration = true,
-                    componentMerging = false,
+                    componentMerging = true,
                 )
             }
 

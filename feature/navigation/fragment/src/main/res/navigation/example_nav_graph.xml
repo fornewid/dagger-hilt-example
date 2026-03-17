@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/example"
-        android:name="io.github.fornewid.feature.navigation.fragment.bindings.ExampleNavGraphFragment"
+        android:name="io.github.fornewid.feature.navigation.fragment.ExampleNavGraphFragment"
         android:label="example_nav_graph_fragment"
         tools:layout="@layout/example_nav_graph_fragment" />
 

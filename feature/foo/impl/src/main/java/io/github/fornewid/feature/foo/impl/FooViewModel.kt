@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.fornewid.data.ExampleRepository
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class FooViewModel @Inject constructor(
+class FooViewModel(
     private val exampleRepository: ExampleRepository,
 ) : ViewModel() {
 

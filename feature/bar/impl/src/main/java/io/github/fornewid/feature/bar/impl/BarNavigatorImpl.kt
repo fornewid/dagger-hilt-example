@@ -1,4 +1,4 @@
-package io.github.fornewid.feature.bar.bindings
+package io.github.fornewid.feature.bar.impl
 
 import android.content.Context
 import android.content.Intent

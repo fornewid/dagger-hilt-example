@@ -1,4 +1,4 @@
-package io.github.fornewid.feature.bar.bindings
+package io.github.fornewid.feature.bar.impl
 
 interface BarInjector {
     fun inject(activity: BarActivity)

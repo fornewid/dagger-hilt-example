@@ -1,4 +1,4 @@
-package io.github.fornewid.feature.compose.bindings
+package io.github.fornewid.feature.compose
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

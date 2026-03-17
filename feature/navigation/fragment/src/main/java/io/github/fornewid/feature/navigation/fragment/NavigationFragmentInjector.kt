@@ -1,4 +1,4 @@
-package io.github.fornewid.feature.navigation.fragment.bindings
+package io.github.fornewid.feature.navigation.fragment
 
 interface NavigationFragmentInjector {
     fun inject(activity: ExampleNavigationFragmentActivity)
