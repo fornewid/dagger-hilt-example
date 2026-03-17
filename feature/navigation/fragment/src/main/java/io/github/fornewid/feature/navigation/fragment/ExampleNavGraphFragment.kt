@@ -3,13 +3,22 @@ package io.github.fornewid.feature.navigation.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.navigation.navGraphViewModels
+import io.github.fornewid.core.kotlin.DaggerViewModelFactory
+import io.github.fornewid.core.kotlin.injector
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class ExampleNavGraphFragment : Fragment(R.layout.example_nav_graph_fragment) {
 
-    private val viewModel: ExampleNavGraphViewModel by hiltNavGraphViewModels(R.id.nav_graph)
+    @Inject
+    lateinit var viewModelFactory: DaggerViewModelFactory
+
+    private val viewModel: ExampleNavGraphViewModel by navGraphViewModels(R.id.nav_graph) { viewModelFactory }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        (requireContext().injector as NavigationFragmentInjector).inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

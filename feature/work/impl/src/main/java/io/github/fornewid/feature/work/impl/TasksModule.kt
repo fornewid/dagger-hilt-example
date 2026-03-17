@@ -1,13 +1,13 @@
 package io.github.fornewid.feature.work.impl
 
+import com.squareup.anvil.annotations.ContributesTo
 import dagger.Binds
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import io.github.fornewid.core.kotlin.AppScope
 import io.github.fornewid.feature.work.ExampleTasks
 
 @Module
-@InstallIn(SingletonComponent::class)
+@ContributesTo(AppScope::class)
 interface TasksModule {
 
     @Binds

@@ -8,21 +8,19 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.AndroidEntryPoint
 import io.github.fornewid.core.compose.ExampleTheme
+import io.github.fornewid.core.kotlin.injector
 import io.github.fornewid.feature.bar.Bar
-import io.github.fornewid.feature.compose.hilt.ComposableComponent
+import io.github.fornewid.feature.compose.ComposeInjector
 import io.github.fornewid.feature.compose.hilt.ComposableScoped
 import io.github.fornewid.feature.compose.hilt.HiltComposable
-import io.github.fornewid.feature.compose.hilt.fromComposable
+import io.github.fornewid.feature.compose.hilt.rememberComposableEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class AdvancedExampleComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (injector as ComposeInjector).inject(this)
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -90,17 +88,11 @@ object HiltComposableScoped {
 
     @Composable
     private fun rememberStateHolder(): ExampleStateHolder {
-        val entryPoint = fromComposable(ExampleEntryPoint::class.java)
+        val component = rememberComposableEntryPoint()
         return remember {
-            entryPoint.exampleStateHolder()
+            component.exampleStateHolder()
         }
     }
-}
-
-@EntryPoint
-@InstallIn(ComposableComponent::class)
-interface ExampleEntryPoint {
-    fun exampleStateHolder(): ExampleStateHolder
 }
 
 @ComposableScoped

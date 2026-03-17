@@ -3,37 +3,42 @@ package io.github.fornewid.feature.compose.hilt
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import dagger.hilt.EntryPoints
+import io.github.fornewid.core.kotlin.injector
 
 @Composable
 fun HiltComposable(
     content: @Composable () -> Unit
 ) {
-    val componentManager = rememberComposableComponentManager()
+    val component = rememberComposableComponent()
     CompositionLocalProvider(
-        LocalComponentManager provides componentManager,
+        LocalComposableComponent provides component,
         content = content,
     )
 }
 
 @Composable
-fun rememberComposableComponentManager(): ComposableComponentManager {
+fun rememberComposableComponent(): ComposableComponent {
     val context = LocalContext.current
-    val compositionContext = rememberCompositionContext()
-    return remember(context, compositionContext) {
-        ComposableComponentManager(context = context, compositionContext = compositionContext)
+    return remember(context) {
+        val factory = (context.injector as ComposableComponentFactoryProvider).composableComponentFactory()
+        factory.create()
     }
 }
 
-val LocalComponentManager = staticCompositionLocalOf<ComposableComponentManager> {
-    error("CompositionLocal LocalComponentManager not present")
+val LocalComposableComponent = staticCompositionLocalOf<ComposableComponent> {
+    error("CompositionLocal LocalComposableComponent not present")
 }
 
 @Composable
-fun <T> fromComposable(entryPoint: Class<T>): T {
-    val component = LocalComponentManager.current
-    return EntryPoints.get(component, entryPoint)
+fun rememberComposableEntryPoint(): ComposableComponent {
+    return LocalComposableComponent.current
+}
+
+/**
+ * Implemented by the AppComponent to provide the ComposableComponent.Factory.
+ */
+interface ComposableComponentFactoryProvider {
+    fun composableComponentFactory(): ComposableComponent.Factory
 }

@@ -1,13 +1,13 @@
 package io.github.fornewid.data
 
+import com.squareup.anvil.annotations.ContributesTo
 import dagger.Binds
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import io.github.fornewid.core.kotlin.AppScope
 
 @Module
-@InstallIn(SingletonComponent::class)
-internal interface DataModule {
+@ContributesTo(AppScope::class)
+interface DataModule {
 
     @Binds
     fun bindRepository(impl: ExampleRepositoryImpl): ExampleRepository

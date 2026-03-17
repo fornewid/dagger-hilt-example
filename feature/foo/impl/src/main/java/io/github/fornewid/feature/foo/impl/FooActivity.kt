@@ -3,14 +3,19 @@ package io.github.fornewid.feature.foo.impl
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
-import dagger.hilt.android.AndroidEntryPoint
+import io.github.fornewid.core.kotlin.DaggerViewModelFactory
+import io.github.fornewid.core.kotlin.injector
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class FooActivity : ComponentActivity(R.layout.foo_activity) {
 
-    private val viewModel: FooViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: DaggerViewModelFactory
+
+    private val viewModel: FooViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (injector as FooInjector).inject(this)
         super.onCreate(savedInstanceState)
         viewModel.doSomething()
     }

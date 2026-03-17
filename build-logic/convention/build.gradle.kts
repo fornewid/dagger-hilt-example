@@ -14,7 +14,7 @@ dependencies {
     compileOnly(libs.kotlin.pluginGradle)
     compileOnly(libs.kotlin.composePluginGradle)
     compileOnly(libs.ksp.pluginGradle)
-    compileOnly(libs.dagger.hilt.pluginGradle)
+    compileOnly(libs.anvil.pluginGradle)
 }
 
 gradlePlugin {
@@ -31,9 +31,13 @@ gradlePlugin {
             id = "example.android.compose"
             implementationClass = "AndroidComposeConventionPlugin"
         }
-        register("androidHilt") {
-            id = "example.android.hilt"
-            implementationClass = "AndroidHiltConventionPlugin"
+        register("androidDagger") {
+            id = "example.android.dagger"
+            implementationClass = "AndroidDaggerConventionPlugin"
+        }
+        register("androidAnvil") {
+            id = "example.android.anvil"
+            implementationClass = "AnvilConventionPlugin"
         }
     }
 }

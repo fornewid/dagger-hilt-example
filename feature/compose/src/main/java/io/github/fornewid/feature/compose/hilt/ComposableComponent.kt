@@ -1,8 +1,16 @@
 package io.github.fornewid.feature.compose.hilt
 
-import dagger.hilt.DefineComponent
-import dagger.hilt.android.components.ActivityComponent
+import dagger.Subcomponent
+import io.github.fornewid.feature.compose.advanced.ExampleStateHolder
 
 @ComposableScoped
-@DefineComponent(parent = ActivityComponent::class)
-interface ComposableComponent
+@Subcomponent
+interface ComposableComponent {
+
+    fun exampleStateHolder(): ExampleStateHolder
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): ComposableComponent
+    }
+}

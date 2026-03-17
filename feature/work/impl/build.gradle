@@ -1,6 +1,7 @@
 plugins {
     id 'example.android.library'
-    id 'example.android.hilt'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
 }
 
 android {
@@ -13,10 +14,9 @@ android {
 dependencies {
     implementation project(':feature:bar:api')
     implementation project(':feature:work:api')
+    implementation project(':core:kotlin')
 
     implementation libs.androidx.work.runtime
-    implementation libs.androidx.hilt.work
-    ksp libs.androidx.hilt.compiler
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit

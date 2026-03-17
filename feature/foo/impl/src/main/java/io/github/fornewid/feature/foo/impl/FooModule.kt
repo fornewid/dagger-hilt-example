@@ -1,14 +1,14 @@
 package io.github.fornewid.feature.foo.impl
 
+import com.squareup.anvil.annotations.ContributesTo
 import dagger.Binds
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import io.github.fornewid.core.kotlin.AppScope
 import io.github.fornewid.feature.foo.Foo
 import io.github.fornewid.feature.foo.FooNavigator
 
 @Module
-@InstallIn(SingletonComponent::class)
+@ContributesTo(AppScope::class)
 interface FooModule {
 
     @Binds

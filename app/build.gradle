@@ -1,6 +1,7 @@
 plugins {
     id 'example.android.application'
-    id 'example.android.hilt'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
 }
 
 android {
@@ -24,21 +25,18 @@ android {
     }
 }
 
-// Turn ON enableAggregatingTask by default in Dagger Hilt 2.40
-// https://github.com/google/dagger/releases/tag/dagger-2.40
-//hilt {
-//    enableAggregatingTask = true
-//}
-
 dependencies {
+    implementation project(':core:kotlin')
+    implementation project(':data')
+
     implementation project(':feature:foo:api')
-    runtimeOnly project(':feature:foo:impl')
+    implementation project(':feature:foo:impl')
 
     implementation project(':feature:bar:api')
-    runtimeOnly project(':feature:bar:impl')
+    implementation project(':feature:bar:impl')
 
     implementation project(':feature:work:api')
-    runtimeOnly project(':feature:work:impl')
+    implementation project(':feature:work:impl')
 
     implementation project(':feature:navigation:fragment')
     implementation project(':feature:navigation:compose')
@@ -55,8 +53,6 @@ dependencies {
     implementation libs.androidx.fragment
 
     implementation libs.androidx.work.runtime
-    implementation libs.androidx.hilt.work
-    ksp libs.androidx.hilt.compiler
 
     implementation libs.androidx.lifecycle.viewmodel.ktx
     implementation libs.androidx.lifecycle.service

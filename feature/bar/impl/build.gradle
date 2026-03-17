@@ -1,6 +1,7 @@
 plugins {
     id 'example.android.library'
-    id 'example.android.hilt'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
 }
 
 android {
@@ -13,6 +14,7 @@ android {
 dependencies {
     implementation project(':feature:bar:api')
     implementation project(':feature:foo:api')
+    implementation project(':core:kotlin')
     implementation project(':data')
 
     implementation libs.androidx.activity

@@ -3,14 +3,19 @@ package io.github.fornewid.feature.bar.impl
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
-import dagger.hilt.android.AndroidEntryPoint
+import io.github.fornewid.core.kotlin.DaggerViewModelFactory
+import io.github.fornewid.core.kotlin.injector
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class BarActivity : ComponentActivity(R.layout.bar_activity) {
 
-    private val viewModel: BarViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: DaggerViewModelFactory
+
+    private val viewModel: BarViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (injector as BarInjector).inject(this)
         super.onCreate(savedInstanceState)
         viewModel.doSomething()
     }
