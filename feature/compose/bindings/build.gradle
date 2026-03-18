@@ -1,7 +1,7 @@
 plugins {
     id 'example.android.library'
     id 'example.android.dagger'
-    id 'example.android.anvil.merging'
+    id 'example.android.anvil'
 }
 
 android {
