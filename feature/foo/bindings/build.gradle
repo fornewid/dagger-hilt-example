@@ -1,0 +1,18 @@
+plugins {
+    id 'example.android.library'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
+}
+
+android {
+    namespace 'io.github.fornewid.feature.foo.bindings'
+}
+
+dependencies {
+    implementation project(':feature:foo:api')
+    implementation project(':feature:foo:impl')
+    implementation project(':data')
+    implementation project(':core:kotlin')
+
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+}

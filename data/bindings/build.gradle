@@ -1,0 +1,14 @@
+plugins {
+    id 'example.android.library'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
+}
+
+android {
+    namespace 'io.github.fornewid.data.bindings'
+}
+
+dependencies {
+    implementation project(':data')
+    implementation project(':core:kotlin')
+}

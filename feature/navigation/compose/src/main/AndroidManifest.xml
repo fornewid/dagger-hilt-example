@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".ExampleNavigationComposeActivity"
+            android:name="io.github.fornewid.feature.navigation.compose.ExampleNavigationComposeActivity"
             android:exported="false" />
     </application>
 

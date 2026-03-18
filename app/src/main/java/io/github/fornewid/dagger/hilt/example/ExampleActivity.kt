@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import dagger.hilt.android.AndroidEntryPoint
+import io.github.fornewid.core.kotlin.DaggerViewModelFactory
 import io.github.fornewid.dagger.hilt.example.databinding.ExampleActivityBinding
 import io.github.fornewid.feature.bar.BarNavigator
 import io.github.fornewid.feature.compose.ExampleComposeActivity
@@ -14,7 +14,6 @@ import io.github.fornewid.feature.navigation.compose.ExampleNavigationComposeAct
 import io.github.fornewid.feature.navigation.fragment.ExampleNavigationFragmentActivity
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class ExampleActivity : AppCompatActivity() {
 
     @Inject
@@ -23,9 +22,13 @@ class ExampleActivity : AppCompatActivity() {
     @Inject
     lateinit var barNavigator: BarNavigator
 
-    private val viewModel: ExampleViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: DaggerViewModelFactory
+
+    private val viewModel: ExampleViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        appComponent.inject(this)
         super.onCreate(savedInstanceState)
         val binding = ExampleActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)

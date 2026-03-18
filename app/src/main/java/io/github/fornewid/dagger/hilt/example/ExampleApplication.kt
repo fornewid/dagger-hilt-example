@@ -1,23 +1,20 @@
 package io.github.fornewid.dagger.hilt.example
 
 import android.app.Application
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import io.github.fornewid.core.kotlin.InjectorProvider
 
-@HiltAndroidApp
-class ExampleApplication : Application(), Configuration.Provider {
+class ExampleApplication : Application(), Configuration.Provider, InjectorProvider {
 
-    @Inject
-    lateinit var hiltWorkerFactory: HiltWorkerFactory
-
-    override fun onCreate() {
-        super.onCreate()
+    val appComponent: AppComponent by lazy {
+        DaggerMergedAppComponent.factory().create(this)
     }
+
+    override val injector: Any
+        get() = appComponent
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
-            .setWorkerFactory(hiltWorkerFactory)
+            .setWorkerFactory(appComponent.workerFactory())
             .build()
 }

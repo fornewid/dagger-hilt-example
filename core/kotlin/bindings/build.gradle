@@ -1,0 +1,14 @@
+plugins {
+    id 'example.android.library'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
+}
+
+android {
+    namespace 'io.github.fornewid.core.kotlin.bindings'
+}
+
+dependencies {
+    implementation project(':core:kotlin')
+    implementation libs.coroutines.android
+}

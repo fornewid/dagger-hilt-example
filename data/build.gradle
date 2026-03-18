@@ -1,6 +1,7 @@
 plugins {
     id 'example.android.library'
-    id 'example.android.hilt'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
 }
 
 android {
@@ -12,6 +13,7 @@ android {
 
 dependencies {
     implementation project(':core:kotlin')
+    implementation libs.coroutines.core
 
     compileOnly project(':buildconfig-stub')
 

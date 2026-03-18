@@ -4,12 +4,20 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import dagger.hilt.android.AndroidEntryPoint
+import io.github.fornewid.core.kotlin.DaggerViewModelFactory
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class ExampleFragment : Fragment(R.layout.example_fragment) {
 
-    private val viewModel: ExampleViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: DaggerViewModelFactory
+
+    private val viewModel: ExampleViewModel by viewModels { viewModelFactory }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        appComponent.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

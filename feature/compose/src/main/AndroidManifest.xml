@@ -3,10 +3,10 @@
 
     <application>
         <activity
-            android:name=".ExampleComposeActivity"
+            android:name="io.github.fornewid.feature.compose.ExampleComposeActivity"
             android:exported="false" />
         <activity
-            android:name=".advanced.AdvancedExampleComposeActivity"
+            android:name="io.github.fornewid.feature.compose.advanced.AdvancedExampleComposeActivity"
             android:exported="false" />
     </application>
 

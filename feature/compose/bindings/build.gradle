@@ -1,0 +1,14 @@
+plugins {
+    id 'example.android.library'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
+}
+
+android {
+    namespace 'io.github.fornewid.feature.compose.bindings'
+}
+
+dependencies {
+    implementation project(':feature:compose')
+    implementation project(':core:kotlin')
+}

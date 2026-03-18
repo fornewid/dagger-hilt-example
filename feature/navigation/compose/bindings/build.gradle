@@ -1,0 +1,16 @@
+plugins {
+    id 'example.android.library'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
+}
+
+android {
+    namespace 'io.github.fornewid.feature.navigation.compose.bindings'
+}
+
+dependencies {
+    implementation project(':feature:navigation:compose')
+    implementation project(':core:kotlin')
+
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+}

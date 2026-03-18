@@ -8,7 +8,7 @@ import org.gradle.kotlin.dsl.getByType
 
 fun Project.configureCompose() {
     pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
-    val android = extensions.getByName("android") as CommonExtension
+    val android = extensions.getByName("android") as CommonExtension<*, *, *, *, *, *>
     android.buildFeatures.compose = true
     val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
     dependencies {

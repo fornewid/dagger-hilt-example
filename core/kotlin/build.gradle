@@ -1,6 +1,7 @@
 plugins {
     id 'example.android.library'
-    id 'example.android.hilt'
+    id 'example.android.dagger'
+    id 'example.android.anvil'
 }
 
 android {
@@ -11,7 +12,8 @@ android {
 }
 
 dependencies {
-    implementation libs.coroutines.android
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.work.runtime
 
     testImplementation libs.junit
     androidTestImplementation libs.test.ext.junit

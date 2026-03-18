@@ -3,11 +3,9 @@ package io.github.fornewid.dagger.hilt.example
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import dagger.hilt.android.AndroidEntryPoint
 import io.github.fornewid.feature.bar.Bar
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class ExampleView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -16,4 +14,10 @@ class ExampleView @JvmOverloads constructor(
 
     @Inject
     lateinit var bar: Bar
+
+    init {
+        if (!isInEditMode) {
+            appComponent.inject(this)
+        }
+    }
 }

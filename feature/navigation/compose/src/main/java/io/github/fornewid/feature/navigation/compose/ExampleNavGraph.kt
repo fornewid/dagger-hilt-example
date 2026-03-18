@@ -2,14 +2,15 @@ package io.github.fornewid.feature.navigation.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun ExampleNavGraph() {
+fun ExampleNavGraph(viewModelFactory: ViewModelProvider.Factory) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -18,7 +19,7 @@ fun ExampleNavGraph() {
         composable(route = "example") {
             ExampleScreen(
                 screenName = "example",
-                viewModel = hiltViewModel(),
+                viewModel = viewModel(factory = viewModelFactory),
                 onClick = {
                     navController.navigate(route = "example_navigation")
                 },
@@ -34,7 +35,7 @@ fun ExampleNavGraph() {
                 }
                 ExampleScreen(
                     screenName = "nested_example1",
-                    viewModel = hiltViewModel(parent),
+                    viewModel = viewModel(viewModelStoreOwner = parent, factory = viewModelFactory),
                     onClick = {
                         navController.navigate("nested_example2")
                     },
@@ -46,7 +47,7 @@ fun ExampleNavGraph() {
                 }
                 ExampleScreen(
                     screenName = "nested_example2",
-                    viewModel = hiltViewModel(parent),
+                    viewModel = viewModel(viewModelStoreOwner = parent, factory = viewModelFactory),
                 )
             }
         }

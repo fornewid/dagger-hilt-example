@@ -10,22 +10,18 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
 import io.github.fornewid.core.compose.ExampleTheme
+import io.github.fornewid.core.kotlin.injector
 import io.github.fornewid.feature.bar.Bar
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class ExampleComposeActivity : ComponentActivity() {
 
     @Inject
     lateinit var bar: Bar
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (injector as ComposeInjector).inject(this)
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -38,7 +34,7 @@ class ExampleComposeActivity : ComponentActivity() {
                     CompositionLocal.Screen(bar = bar)
 
                     // Option 3
-                    EntryPoints.Screen()
+                    InjectorEntryPoints.Screen()
                 }
             }
         }
@@ -117,9 +113,13 @@ object CompositionLocal {
 }
 
 /**
- * https://dagger.dev/hilt/entry-points
+ * Access dependencies via the injector from any Composable.
  */
-object EntryPoints {
+object InjectorEntryPoints {
+
+    interface BarProvider {
+        fun bar(): Bar
+    }
 
     @Composable
     fun Screen() {
@@ -152,15 +152,7 @@ object EntryPoints {
     private fun rememberBar(): Bar {
         val context = LocalContext.current
         return remember {
-            EntryPointAccessors
-                .fromApplication(context, ExampleEntryPoint::class.java)
-                .bar()
+            (context.injector as BarProvider).bar()
         }
-    }
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface ExampleEntryPoint {
-        fun bar(): Bar
     }
 }
