@@ -9,12 +9,16 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
 dependencies {
     compileOnly(libs.android.pluginGradle)
     compileOnly(libs.kotlin.pluginGradle)
-    compileOnly(libs.kotlin.composePluginGradle)
-    compileOnly(libs.ksp.pluginGradle)
-    compileOnly(libs.dagger.hilt.pluginGradle)
+    compileOnly(libs.anvil.pluginGradle)
 }
 
 gradlePlugin {
@@ -27,13 +31,9 @@ gradlePlugin {
             id = "example.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
-        register("androidCompose") {
-            id = "example.android.compose"
-            implementationClass = "AndroidComposeConventionPlugin"
-        }
-        register("androidHilt") {
-            id = "example.android.hilt"
-            implementationClass = "AndroidHiltConventionPlugin"
+        register("androidAnvil") {
+            id = "example.android.anvil"
+            implementationClass = "AndroidAnvilConventionPlugin"
         }
     }
 }

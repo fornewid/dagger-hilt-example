@@ -1,20 +1,14 @@
 package io.github.fornewid.dagger.hilt.example
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import dagger.hilt.android.AndroidEntryPoint
+import io.github.fornewid.core.kotlin.di.activityRetainedComponent
 import io.github.fornewid.dagger.hilt.example.databinding.ExampleActivityBinding
 import io.github.fornewid.feature.bar.BarNavigator
-import io.github.fornewid.feature.compose.ExampleComposeActivity
-import io.github.fornewid.feature.compose.advanced.AdvancedExampleComposeActivity
 import io.github.fornewid.feature.foo.FooNavigator
-import io.github.fornewid.feature.navigation.compose.ExampleNavigationComposeActivity
-import io.github.fornewid.feature.navigation.fragment.ExampleNavigationFragmentActivity
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class ExampleActivity : AppCompatActivity() {
 
     @Inject
@@ -23,9 +17,12 @@ class ExampleActivity : AppCompatActivity() {
     @Inject
     lateinit var barNavigator: BarNavigator
 
-    private val viewModel: ExampleViewModel by viewModels()
+    private val viewModel: ExampleViewModel by viewModels {
+        activityRetainedComponent.viewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as ExampleApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         val binding = ExampleActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -37,18 +34,6 @@ class ExampleActivity : AppCompatActivity() {
         }
         binding.bar.setOnClickListener {
             startActivity(barNavigator.createIntent(this))
-        }
-        binding.navigationFragment.setOnClickListener {
-            startActivity(Intent(this, ExampleNavigationFragmentActivity::class.java))
-        }
-        binding.navigationCompose.setOnClickListener {
-            startActivity(Intent(this, ExampleNavigationComposeActivity::class.java))
-        }
-        binding.composeBasic.setOnClickListener {
-            startActivity(Intent(this, ExampleComposeActivity::class.java))
-        }
-        binding.composeAdvanced.setOnClickListener {
-            startActivity(Intent(this, AdvancedExampleComposeActivity::class.java))
         }
     }
 }

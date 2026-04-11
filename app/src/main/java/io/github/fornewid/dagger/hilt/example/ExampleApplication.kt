@@ -1,23 +1,16 @@
 package io.github.fornewid.dagger.hilt.example
 
 import android.app.Application
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import io.github.fornewid.core.kotlin.di.ActivityRetainedComponent
+import io.github.fornewid.core.kotlin.di.ComponentProvider
+import io.github.fornewid.dagger.hilt.example.di.DaggerAppComponent
 
-@HiltAndroidApp
-class ExampleApplication : Application(), Configuration.Provider {
+class ExampleApplication : Application(), ComponentProvider {
 
-    @Inject
-    lateinit var hiltWorkerFactory: HiltWorkerFactory
-
-    override fun onCreate() {
-        super.onCreate()
+    val appComponent by lazy {
+        DaggerAppComponent.factory().create(this)
     }
 
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(hiltWorkerFactory)
-            .build()
+    override fun activityRetainedComponentFactory(): ActivityRetainedComponent.Factory =
+        appComponent.activityRetainedComponentFactory()
 }

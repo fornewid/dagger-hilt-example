@@ -11,7 +11,7 @@ interface ExampleRepository {
     suspend fun getSomething(): String
 }
 
-internal class ExampleRepositoryImpl @Inject constructor(
+class ExampleRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ExampleRepository {
 
